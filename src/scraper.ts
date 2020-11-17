@@ -21,13 +21,13 @@ async function delay(ms: number) {
 function parseData(data: Response<string>) {
   let op = {
     title: "",
-    tags: "",
+    tags: [],
     img: "",
     short_disc: "",
     type: "",
     author: "",
   };
-
+  let temp_tags: any = [];
   const $ = load(data?.body);
 
   op["img"] = $("img")[0].attribs?.src;
@@ -39,9 +39,9 @@ function parseData(data: Response<string>) {
   $("#seriesgenre")
     .find("a")
     .each((i, ele) => {
-      tags += $(ele).text() + " ";
+      temp_tags.push($(ele).text());
     });
-  op.tags = tags;
+  op.tags = temp_tags;
   return JSON.stringify(op);
 }
 function parseMetaData(data: Response<string>) {

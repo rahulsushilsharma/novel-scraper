@@ -29,7 +29,6 @@ readFile("data.txt")
     });
     return;
   })
-  .then(() => tagsToString(data_arr_obj))
   .then(() => {
       data_arr_obj.forEach(async (e)=>{
           await updateDatabase(e);
@@ -40,14 +39,8 @@ readFile("data.txt")
 function giveMeArray(inp: { toString: () => string }) {
   return inp.toString().split("\n\n rahul sharma \n\n");
 }
-tagsToString(data_arr_obj);
 
-function tagsToString(arr: any[]) {
-  arr.forEach((element) => {
-    let temp = element.tags.split(" ");
-    element.tags = temp;
-  });
-}
+
 
 async function updateDatabase(data: {
   title: any;
