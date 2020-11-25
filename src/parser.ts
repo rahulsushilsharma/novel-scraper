@@ -14,6 +14,7 @@ const firebase_ini = {
 
 var app = firebase.initializeApp(firebase_ini);
 const db = app.firestore();
+const rdb = app.database();
 
 let data_arr = [];
 let data_arr_obj: any[] = [];
@@ -51,13 +52,23 @@ async function updateDatabase(data: {
   author?: string;
 }) {
   console.log(`uploading .......`);
-  return await db
-    .collection("novels")
-    .add(data)
+//   return await db
+//     .collection("novels")
+//     .add(data)
+//     .then(() => {
+//       console.log(`Document successfully written!`);
+//     })
+//     .catch((error: any) => {
+//       console.error("Error writing document: ", error);
+//     });
+  return await rdb
+    .ref(data)
+    .set(data)
     .then(() => {
       console.log(`Document successfully written!`);
     })
     .catch((error: any) => {
       console.error("Error writing document: ", error);
     });
+
 }

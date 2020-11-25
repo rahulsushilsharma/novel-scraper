@@ -66,7 +66,7 @@ async function write(data: any) {
   );
 }
 getMetaData(
-  "https://www.novelupdates.com/novelslisting/?sort=2&order=1&status=1&pg=5"
+  "https://www.novelupdates.com/series-ranking/?rank=popular&pg=3"
 )
   .then((data) => parseMetaData(data))
   .then(async (data) => {

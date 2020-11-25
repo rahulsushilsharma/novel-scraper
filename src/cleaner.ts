@@ -25,7 +25,7 @@ function clean(arr: any[]) {
 }
 
 async function write(data: string | Uint8Array) {
-    console.log("writing data");
+    console.log("*********cleaning data*************");
     return await writeFile("data.txt", data);
 }
 

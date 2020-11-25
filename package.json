@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./dist/scraper.js && node ./dist/parser.js"
+    "start": "node ./dist/scraper.js && node ./dist/cleaner.js && node ./dist/parser.js"
   },
   "keywords": [],
   "author": "",
