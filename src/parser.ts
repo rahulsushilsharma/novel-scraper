@@ -1,5 +1,10 @@
-import { readFile } from "fs/promises";
 const firebase = require("firebase");
+import * as Datastore from "nedb";
+
+//firebase deploy --only hosting:beta-lightnovel for beta site
+
+const database = new Datastore("./database/lightnovelworld/novel-meta.db");
+database.loadDatabase();
 
 const firebase_ini = {
   apiKey: "AIzaSyDb5jb0y1tJ1V0cYD_uWtCTquGwo1z66m0",
@@ -12,57 +17,26 @@ const firebase_ini = {
   measurementId: "G-KVY70Q10W0",
 };
 
-var app = firebase.initializeApp(firebase_ini);
+const firebaseConfig = {
+  apiKey: "AIzaSyDBaa5FToKVA6Sick5kBK54bDMWVDrRXNc",
+  authDomain: "novel-beta.firebaseapp.com",
+  databaseURL: "https://novel-beta.firebaseio.com",
+  projectId: "novel-beta",
+  storageBucket: "novel-beta.appspot.com",
+  messagingSenderId: "430751424298",
+  appId: "1:430751424298:web:91e21b51ad31cfeec60853",
+  measurementId: "G-7W7LFLCLQN",
+};
+
+var app = firebase.initializeApp(firebaseConfig);
+
 const db = app.firestore();
-const rdb = app.database();
 
-let data_arr = [];
-let data_arr_obj: any[] = [];
-
-readFile("data.txt")
-  .then((data) => {
-    data_arr = giveMeArray(data);
-    data_arr.forEach((e) => {
-      if (e != "") {
-        var x = JSON.parse(e.trim());
-        data_arr_obj.push(x);
-      }
-    });
-    return;
-  })
-  .then(() => {
-      data_arr_obj.forEach(async (e)=>{
-          await updateDatabase(e);
-      })
-    })
-  .catch((e) => console.log(e));
-
-function giveMeArray(inp: { toString: () => string }) {
-  return inp.toString().split("\n\n rahul sharma \n\n");
-}
-
-
-
-async function updateDatabase(data: {
-  title: any;
-  tags?: string[];
-  img?: string;
-  short_disc?: string;
-  type?: string;
-  author?: string;
-}) {
+async function updateDatabase(data: any, d: any) {
   console.log(`uploading .......`);
-//   return await db
-//     .collection("novels")
-//     .add(data)
-//     .then(() => {
-//       console.log(`Document successfully written!`);
-//     })
-//     .catch((error: any) => {
-//       console.error("Error writing document: ", error);
-//     });
-  return await rdb
-    .ref(data)
+  return await db
+    .collection("novels")
+    .doc(d)
     .set(data)
     .then(() => {
       console.log(`Document successfully written!`);
@@ -70,5 +44,26 @@ async function updateDatabase(data: {
     .catch((error: any) => {
       console.error("Error writing document: ", error);
     });
-
 }
+
+function re() {
+  database.find({}).exec((err: any, array: any) => {
+    var i,
+      j,
+      temparray,
+      chunk = 25,
+      d = "page-",
+      k = 1;
+    for (i = 0, j = array.length; i < j; i += chunk) {
+      temparray = array.slice(i, i + chunk);
+      let di = d + k;
+      console.log(di);
+
+      updateDatabase({ data: temparray }, di);
+      // do whatever
+      k++;
+    }
+  });
+}
+
+re();

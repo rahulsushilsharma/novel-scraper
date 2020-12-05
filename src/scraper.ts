@@ -35,7 +35,6 @@ function parseData(data: Response<string>) {
   op["author"] = $("#authtag").text();
   op["type"] = $("#showtype").find("a").text();
   op["short_disc"] = $("#editdescription").find("p").text();
-  let tags = "";
   $("#seriesgenre")
     .find("a")
     .each((i, ele) => {

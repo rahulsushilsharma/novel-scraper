@@ -1,17 +1,39 @@
+import * as Datastore from "nedb";
 import got, { Response } from "got";
 import { URL } from "url";
 import { load } from "cheerio";
-import { appendFile } from "fs/promises";
 import { TimeoutError } from "got";
 
-const mainUrl = 'https://www.lightnovelworld.com/browse/all/popular/all/1';
+//firebase deploy --only hosting:beta-lightnovel for beta site
+
+
+const database = new Datastore("./database/novels.db");
+database.loadDatabase();
+
+let db: any[] = [];
+
+function writeDatabase(){
+  console.log(db);
+  
+  database.insert(db , function (err, newDocs) {
+    console.log(newDocs);
+    
+  });
+}
 
 async function getData(url: string | URL) {
-  return got(url, { timeout: 3000 })
+  return await got(url, { timeout: 3000 })
     .then((data) => parseData(data))
-    .then((data) => write(data))
+    .then((datas)=>{
+      database.insert(datas,(err,doc)=>{
+        if(err)console.log(err);
+        else console.log('written to db', doc);
+        
+      });
+    })
     .then(() => delay(3000 * Math.random()));
 }
+
 async function getMetaData(url: string | URL) {
   return got(url, { timeout: 3000 });
 }
@@ -37,15 +59,15 @@ function parseData(data: Response<string>) {
   op["author"] = $("#authtag").text();
   op["type"] = $("#showtype").find("a").text();
   op["short_disc"] = $("#editdescription").find("p").text();
-  let tags = "";
   $("#seriesgenre")
     .find("a")
     .each((i, ele) => {
       temp_tags.push($(ele).text());
     });
   op.tags = temp_tags;
-  return JSON.stringify(op);
+  return op;
 }
+
 function parseMetaData(data: Response<string>) {
   let op: (string | undefined)[] = [];
 
@@ -59,15 +81,11 @@ function parseMetaData(data: Response<string>) {
   return op;
 }
 
-
 async function write(data: any) {
-  console.log("writing data");
-
-  return await appendFile("data.txt", data).then(() =>
-    appendFile("data.txt", "\n\n rahul sharma \n\n")
-  );
+  console.log("writing data", );
+  db.push(data);
 }
-getMetaData(mainUrl)
+getMetaData("https://www.novelupdates.com/series-ranking/?rank=popular&pg=1")
   .then((data) => parseMetaData(data))
   .then(async (data) => {
     for await (const iterator of data) {
@@ -79,4 +97,7 @@ getMetaData(mainUrl)
       });
     }
   })
+  
   .catch((e) => console.log(e));
+
+

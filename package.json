@@ -14,12 +14,12 @@
     "@types/cheerio": "^0.22.22",
     "@types/got": "^9.6.11",
     "@types/node": "^14.14.6",
-    "@types/puppeteer": "^5.4.0"
+    "@types/nedb": "^1.8.11"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
     "firebase": "^8.0.1",
     "got": "^11.8.0",
-    "puppeteer": "^5.4.1"
+    "nedb": "^1.8.0"
   }
 }
