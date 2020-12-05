@@ -32,10 +32,10 @@ function parseData(data: Response<string>) {
 
   op["img"] = $("img")[0].attribs?.src;
   op["title"] = $(".seriestitlenu").text();
-  op["author"] = $("#authtag").text();
-  op["type"] = $("#showtype").find("a").text();
-  op["short_disc"] = $("#editdescription").find("p").text();
-  $("#seriesgenre")
+  op["author"] = $("authtag").text();
+  op["type"] = $("showtype").find("a").text();
+  op["short_disc"] = $("editdescription").find("p").text();
+  $("seriesgenre")
     .find("a")
     .each((i, ele) => {
       temp_tags.push($(ele).text());
