@@ -12,31 +12,10 @@ interface release {
   url?: string;
 }
 
-const novel_list = new Datastore('./database/novels-list.db');
+let NAME :string;
+const novel_list = new Datastore("./database/novels-list.db");
 
 novel_list.loadDatabase();
-
-let name : string;
-
-novel_list.find({}).exec(async (err, doc)=>{
-  let i = 1;
-  for await (let data of doc) {
-    // name = data.name;
-    // await delay(10000).then(()=>{
-    //   console.log(data);
-    // })
-    
-    await getData(data.url)
-      .then(() => {
-        console.log("*********** Novel Number ************", i++);
-      })
-      .catch((e) => {
-        console.error(e);
-      });
-  }
-})
-
-
 
 const database = new Datastore("./database/novels-meta.db");
 
@@ -44,8 +23,8 @@ database.loadDatabase();
 
 async function getData(url: string | URL) {
   return await got(url, { timeout: 3000 })
-    .then((data) => parseData(url as string, data))
-    .then(() => delay(10000 * Math.random()))
+    .then(async (data) => await parseData(url as string, data))
+    .then(async () => await delay(10000 * Math.random()))
     .catch((e) => console.log(e));
 }
 
@@ -53,23 +32,23 @@ async function delay(ms: number) {
   return await new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function parseData(url: string, data: Response<string>) {
+async function parseData(url: string, data: Response<string>) {
   const $ = load(data?.body);
 
-  console.log($(".digg_pagination").find("a")[2]?.attribs.href.slice(6));
+  console.log($(".digg_pagination").find("a")[2].attribs.href.slice(6));
 
   let lastPage = parseInt(
-    $(".digg_pagination").find("a")[2]?.attribs.href.slice(6)
+    $(".digg_pagination").find("a")[2].attribs.href.slice(6)
   );
-  getChapterLinks(url, lastPage).then((data)=>{
-    database.insert(data,(e,d)=>{
-      console.log('written to database');
+  await getChapterLinks(url, lastPage)
+    .then((data) => {
+      database.insert(data, (e, d) => {
+        console.log("written to database");
+      });
+    })
+    .catch((e) => {
+      console.log("!!!ERROR IN GETCHAPTERLINKS!!!");
     });
-  }).catch((e)=>{
-    console.log('!!!ERROR IN GETCHAPTERLINKS');
-    
-  })
-  
 }
 
 async function getChapterLinks(url: string, lastPage: number) {
@@ -85,7 +64,6 @@ async function getChapterLinks(url: string, lastPage: number) {
 }
 
 async function geturls(arr_of_url: any) {
-  
   let orignal_urls: release[] = [];
   let i = 1;
 
@@ -94,13 +72,10 @@ async function geturls(arr_of_url: any) {
       .then((data) => parseUrlOfChapters(data))
       .then((data) => {
         orignal_urls = orignal_urls.concat(data);
-        console.log(orignal_urls);
-        
       })
       .then(async () => await delay(1000 * Math.random()))
       .then(() => {
         console.log("written", i++);
-
       })
       .catch((e) => {
         console.error(e);
@@ -137,10 +112,10 @@ function parseUrlOfChapters(data: any) {
   real_arr.forEach((element) => {
     let data: release = {
       date: element[0],
-      name: name,
+      name: NAME,
       group: $(element[1]).text(),
-      chapter: $(element[2])[0]?.attribs.title,
-      url: $(element[2])[0]?.attribs.href.slice(2),
+      chapter: $(element[2])[0].attribs.title,
+      url: $(element[2])[0].attribs.href.slice(2),
     };
 
     op.push(data);
@@ -148,4 +123,21 @@ function parseUrlOfChapters(data: any) {
   return op;
 }
 
+novel_list.find({}).sort({ rank: 1 }).exec(async (err, doc) => {
+ await run(doc)
+});
+
+async function run(data: any[] ) {
+  let i = 1;
+  for await (let url of data) {
+    NAME = url.name;
+    await getData(url.url)
+      .then(() => {
+        console.log("novel number ", i++);
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  }
+}
 
