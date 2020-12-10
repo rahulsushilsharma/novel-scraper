@@ -20,4 +20,13 @@ export interface meta {
   totel_chapters?: number|null;
   complete?: string;
 }
+export interface chapter {
+  chapter: string ;
+  title : string;
+  orignal_chapter_number : string;
+  computed_chapter_number : number;
+  date : string;
+  group : string;
+  orignal_url : string;
+}
 
