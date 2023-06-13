@@ -65,7 +65,7 @@ async function write(data: any) {
   );
 }
 getMetaData(
-  "https://www.novelupdates.com/series-ranking/?rank=popular&pg=3"
+  "https://innread.com/"
 )
   .then((data) => parseMetaData(data))
   .then(async (data) => {
