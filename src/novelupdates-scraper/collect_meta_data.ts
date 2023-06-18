@@ -2,7 +2,7 @@ import got, { Response } from "got";
 import { URL } from "url";
 import { load } from "cheerio";
 import * as Datastore from "nedb";
-import { meta, release } from "../definations";
+import { meta, release } from "../dependicies/definations";
 
 let NAME: string;
 const novel_list = new Datastore("./database/novels-list.db");

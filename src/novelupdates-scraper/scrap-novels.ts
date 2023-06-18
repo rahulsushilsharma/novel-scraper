@@ -2,7 +2,7 @@ import got, { Response } from "got";
 import { URL } from "url";
 import { load } from "cheerio";
 import Datastore = require("nedb-promises");
-import { chapter, meta, release } from "../definations";
+import { chapter, meta, release } from "../dependicies/definations";
 
 const database = Datastore.create("./database-test1/novels-meta.db");
 

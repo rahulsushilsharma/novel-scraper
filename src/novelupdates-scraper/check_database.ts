@@ -1,7 +1,7 @@
 // import * as Datastore from "nedb";
 // import * as Datastore from "nedb-promises";
 import Datastore = require("nedb-promises");
-import { release } from "../definations";
+import { release } from "../dependicies/definations";
 import got, { Response } from "got";
 
 const novels_meta = Datastore.create("./database-test/novels-meta-filtered.db");
