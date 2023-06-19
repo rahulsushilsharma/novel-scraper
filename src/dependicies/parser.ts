@@ -1,4 +1,4 @@
-const firebase = require("firebase");
+import firebase from "firebase";
 import * as Datastore from "nedb";
 
 //firebase deploy --only hosting:beta-lightnovel for beta site
@@ -27,6 +27,16 @@ const firebaseConfig = {
   appId: "1:430751424298:web:91e21b51ad31cfeec60853",
   measurementId: "G-7W7LFLCLQN",
 };
+const firebaseConfig_new = {
+  apiKey: "AIzaSyDcHf2ZGF6wGHNqz-HrZdxR8Z4oRAMIDrs",
+  authDomain: "novelhubs.firebaseapp.com",
+  projectId: "novelhubs",
+  storageBucket: "novelhubs.appspot.com",
+  messagingSenderId: "850701601102",
+  appId: "1:850701601102:web:10ebcdf5754a59c7b0f61f",
+  measurementId: "G-M5PE959C53"
+};
+
 
 var app = firebase.initializeApp(firebaseConfig);
 

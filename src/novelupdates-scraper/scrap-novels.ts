@@ -1,11 +1,13 @@
-import got, { Response } from "got";
+
 import { URL } from "url";
 import { load } from "cheerio";
-import Datastore = require("nedb-promises");
+import Datastore from "@seald-io/nedb";
 import { chapter, meta, release } from "../dependicies/definations";
 
-const database = Datastore.create("./database-test1/novels-meta.db");
-
+const database = new Datastore("./database-test1/novels-meta.db")
+const db :{tset:any}= {
+  tset: undefined
+}
 const db_path = "./database-novel-chapters/";
 
 async function delay(ms: number) {
@@ -14,7 +16,7 @@ async function delay(ms: number) {
 
 async function loadDb() {
   var date1 = new Date().getTime();
-  await database.load();
+  db.tset = await database.loadDatabaseAsync();
   var date2 = new Date().getTime();
   var diff = date2 - date1;
   console.log("database loaded in ", diff / 1000, "seconds");
@@ -25,21 +27,21 @@ async function getData(url: string | URL) {
   console.log("creating a delay of ",ram * 5000, ' for anti bot detection and happy servers😊😊');
   let response = null;
   try {
-    response = await got(url, { timeout: 5000 });
+    response = await fetch(url);
   } catch (e) {
     console.log("error at getting data");
     console.error(e);
   }
   await delay(5000 * ram);
-  return response;
+  return await response?.text();
 }
 
 async function parseData(
   meta: any,
-  data: Response<string> | null,
+  data: string,
   computed_chapter_number: number
 ) {
-  const $ = load(data?.body as string);
+  const $ = load(data);
   let chaprer: chapter = {
     title: $("h1").text(),
     computed_chapter_number: computed_chapter_number,
@@ -53,7 +55,8 @@ async function parseData(
 }
 
 async function query(queryObj: any) {
-  return await database.find({}).sort(queryObj).exec();
+  const data = await db.tset.findAsync({}).sort(queryObj);
+  return data
 }
 
 async function createDatabase(path: string, name: string) {
@@ -61,8 +64,8 @@ async function createDatabase(path: string, name: string) {
 
   console.log("****************creating new database with name:", name);
   let new_path = path + name + ".db";
-  let db = Datastore.create(new_path);
-  await db.load();
+  let db = new Datastore(new_path);
+  db.loadDatabase();
   return db;
 }
 
@@ -85,7 +88,7 @@ async function run() {
     let computed_chapter_number = queryData.chapter_links.length - 1;
     for await (let link of queryData.chapter_links) {
       try{
-        let response = await getData(link.url);
+        let response = await getData(link.url)||"";
       let data = await parseData(link, response, computed_chapter_number);
       console.log(
         "****************writing to db chapter",

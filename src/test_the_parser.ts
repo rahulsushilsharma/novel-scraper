@@ -37,9 +37,9 @@ import fetch from "node-fetch";
 // );
 
 async function getData() {
-  const data = await fetch("https://www.novelupdates.com/");
+  const data = await fetch("https://api.github.com/users/github");
   if (data.ok) {
-    const data_ = await data.text();
+    const data_ = await data.json();
     console.log({
       data_: data_,
       status: data.status,
