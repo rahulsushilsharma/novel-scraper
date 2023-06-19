@@ -1,28 +1,31 @@
-import { URL } from "url";
-import { load } from "cheerio";
-import fetch from "node-fetch";
-import { pharse } from "./innread/parser.js";
+import * as Datastore from "nedb";
 
 
-async function getDataHTML(url: string | URL) {
-  const data = await fetch(url);
-  return await data.text();
+//firebase deploy --only hosting:beta-lightnovel for beta site
+
+
+const database = new Datastore("./database/novels.db");
+database.loadDatabase();
+
+let db: any[] = [];
+
+function writeDatabase(){
+  console.log(db);
+  
+  database.insert(db , function (err, newDocs) {
+    console.log(newDocs);
+    
+  });
 }
-async function getDataJSON(url: string | URL) {
-  const data = await fetch(url);
-  return await data.json();
-}
+
+
+
+
 
 async function delay(ms: number) {
   return await new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function main(){
-  const html = await getDataHTML('https://innread.com/')
-  const data = pharse(html)
-  console.log(data)
-}
-main()
 // function parseData(data: Response<string>) {
 //   let op = {
 //     title: "",
@@ -46,8 +49,9 @@ main()
 //       temp_tags.push($(ele).text());
 //     });
 //   op.tags = temp_tags;
-//   return JSON.stringify(op);
+//   return op;
 // }
+
 // function parseMetaData(data: Response<string>) {
 //   let op: (string | undefined)[] = [];
 
@@ -60,4 +64,24 @@ main()
 //     });
 //   return op;
 // }
+
+// async function write(data: any) {
+//   console.log("writing data", );
+//   db.push(data);
+// }
+// getMetaData("https://www.novelupdates.com/series-ranking/?rank=popular&pg=1")
+//   .then((data) => parseMetaData(data))
+//   .then(async (data) => {
+//     for await (const iterator of data) {
+//       await getData(iterator as string).catch(async (e) => {
+//         if (e instanceof TimeoutError) {
+//           console.log("timeout error retryin...");
+//           await delay(5000).then(() => getData(iterator as string));
+//         } else console.log(e);
+//       });
+//     }
+//   })
+  
+//   .catch((e) => console.log(e));
+
 
