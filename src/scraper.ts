@@ -1,28 +1,56 @@
 import { URL } from "url";
 import { load } from "cheerio";
 import fetch from "node-fetch";
-import { pharse } from "./innread/parser.js";
+import { pharse, pharseData } from "./innread/parser.js";
+import { delay } from "./dependicies/utility.js";
 
+const baseUrl = "https://innread.com";
 
 async function getDataHTML(url: string | URL) {
   const data = await fetch(url);
   return await data.text();
 }
+
 async function getDataJSON(url: string | URL) {
   const data = await fetch(url);
   return await data.json();
 }
 
-async function delay(ms: number) {
-  return await new Promise((resolve) => setTimeout(resolve, ms));
+async function main() {
+  const initialPath = "/novel/ending-maker/chapter-1.html";
+  getAllChapters(initialPath);
 }
+main();
 
-async function main(){
-  const html = await getDataHTML('https://innread.com/')
-  const data = pharse(html)
-  console.log(data)
+async function getAllChapters(initialPath: string) {
+  let data: pharseData = {
+    links: {
+      prevousChapter: "",
+      nextChapter: baseUrl+ initialPath,
+    },
+    title: "",
+    chapterNumber: "",
+    chapterData: [],
+  };
+  let prevData: pharseData = {
+    links: {
+      prevousChapter: "",
+      nextChapter: "",
+    },
+    title: "",
+    chapterNumber: "",
+    chapterData: [],
+  };
+  data.title = "start";
+
+  while (data.title !== prevData.title) {
+    prevData.title = data.title;
+    const html = await getDataHTML(data.links.nextChapter);
+    data = pharse(baseUrl, html);
+    await delay(3000 * Math.random());
+    console.log(data);
+  }
 }
-main()
 // function parseData(data: Response<string>) {
 //   let op = {
 //     title: "",
@@ -60,4 +88,3 @@ main()
 //     });
 //   return op;
 // }
-

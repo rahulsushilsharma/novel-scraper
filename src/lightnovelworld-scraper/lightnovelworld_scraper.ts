@@ -1,4 +1,3 @@
-import got, { Response } from "got";
 import { URL } from "url";
 import { load } from "cheerio";
 import { appendFile } from "fs/promises";
@@ -6,6 +5,7 @@ import { TimeoutError } from "got";
 import * as Datastore from "nedb";
 import { setInterval } from "timers";
 
+let got: any 
 const database = new Datastore("./database/lightnovelworld/novels-list.db");
 const database_meta = new Datastore("./database/lightnovelworld/novel-meta.db");
 const database_chapter_start_links = new Datastore(
@@ -20,8 +20,8 @@ const mainUrl = "https://www.lightnovelworld.com/browse/all/popular/all/";
 async function getData(url: string | URL) {
   return (
     got(url, { timeout: 3000 })
-      .then((data) => parseData(data))
-      .then((datas) => {
+      .then((data:any) => parseData(data))
+      .then((datas:any) => {
         database_meta.insert(datas, (err, doc) => {
           if (err) console.log(err);
           else console.log("written to meta db");
@@ -39,7 +39,7 @@ async function delay(ms: number) {
   return await new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function parseData(data: Response<string>) {
+function parseData(data: any) {
   let op = {
     title: "",
     alternate_title: "",
@@ -105,7 +105,7 @@ function parseData(data: Response<string>) {
   return op;
 }
 
-function parseMetaData(data: Response<string>) {
+function parseMetaData(data:any) {
   let op: (string | undefined)[] = [];
 
   const $ = load(data?.body);
