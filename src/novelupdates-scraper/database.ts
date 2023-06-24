@@ -30,16 +30,17 @@ async function saveHtml(link: string, page: string) {
 
 async function getLastUrl() {
   const docs = await lastLink.findAsync({});
+  console.log(docs)
   return docs[0]?.link;
 }
 
 async function updateLastUrl(url: string) {
   const lastUrl = await getLastUrl();
-  if (lastUrl) {
+  // if (lastUrl) {
     await lastLink.updateAsync({ link: lastUrl }, { link: url }, {});
-  } else {
-    await updateParsedLinks(url);
-  }
+  // } else {
+  //   await updateParsedLinks(url);
+  // }
 }
 
 async function saveNovelLinks(url: string, data: any) {
@@ -61,6 +62,8 @@ async function saveNovelLinks(url: string, data: any) {
     );
   }
 }
+// await updateParsedLinks("https://www.novelupdates.com/novelslisting/?sort=2&order=1&status=1");
+// getLastUrl()
 
 export {
   updateParsedLinks,
