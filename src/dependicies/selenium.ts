@@ -8,14 +8,16 @@ async function gotoPage(url: string) {
 }
 
 async function getCurrentPageHtml() {
-  const data = await driver.findElement(By.css("html"));
+  const data = await driver.findElement(By.css("body"));
+  // data.sendKeys("Keys.ESCAPE");
+  await driver.executeScript('return window.stop')
   const html = await data.getAttribute("innerHTML");
   return html;
 }
 
 async function clickOn(xpath: string) {
   try {
-    await driver.findElement(By.xpath(xpath)).click();
+    await driver.findElement(By.css(xpath)).click();
     return true;
   } catch {
     return false;

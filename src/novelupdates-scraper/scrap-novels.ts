@@ -123,7 +123,7 @@ import { parseNovelLinks } from "./parser.js";
 // run();
 
 async function main() {
-  const nextButtonPath = "/html/body/div[2]/div[3]/div/div/div[1]/div[2]/a[4]";
+  const nextButtonPath = "body > div.l-canvas.col_contside > div.l-main > div > div > div.l-content > div.digg_pagination > a.next_page";
   const defaultUrl =
     "https://www.novelupdates.com/novelslisting/?sort=2&order=1&status=1";
 
@@ -136,20 +136,19 @@ async function main() {
   // const data = parseNovelLinks(html);
   // await saveNovelLinks(link, data);
   // await updateLastUrl(link);
-  const html = await getCurrentPageHtml();
   const link = await getCurrentUrl();
+  await updateLastUrl(link);
+  const html = await getCurrentPageHtml();
   const data = parseNovelLinks(html);
   await saveNovelLinks(link, data);
   let next = await clickOn(nextButtonPath);
-  await updateLastUrl(link);
 
   while (next) {
-    const html = await getCurrentPageHtml();
     const link = await getCurrentUrl();
+    await updateLastUrl(link);
+    const html = await getCurrentPageHtml();
     const data = parseNovelLinks(html);
     await saveNovelLinks(link, data);
-    await updateLastUrl(link);
-
     await delay(3000 * Math.random());
     next = await clickOn(nextButtonPath);
   }

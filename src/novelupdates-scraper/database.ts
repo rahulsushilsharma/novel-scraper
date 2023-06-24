@@ -43,7 +43,23 @@ async function updateLastUrl(url: string) {
 }
 
 async function saveNovelLinks(url: string, data: any) {
-  return await novelLinks.insertAsync({ url: url, data: data, parsed: false });
+  try {
+    return await novelLinks.insertAsync({
+      _id: url,
+      data: data,
+      parsed: false,
+    });
+  } catch {
+    return await novelLinks.updateAsync(
+      { _id: url },
+      {
+        _id: url,
+        data: data,
+        parsed: false,
+      },
+      {}
+    );
+  }
 }
 
 export {
