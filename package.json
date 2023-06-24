@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@seald-io/nedb": "^4.0.2",
+    "@types/ws": "^8.5.4",
     "cheerio": "^1.0.0-rc.3",
     "firebase": "^8.0.1",
     "node-fetch": "^3.3.1",
