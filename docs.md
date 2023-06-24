@@ -355,3 +355,86 @@ To create a UI in Angular that displays a list of elements from a flat JSON and 
    - Your application will open in the browser, and you should see the JSON list UI.
 
 The JSON list UI will display a list of items from the flat JSON. You can search for specific items using the search input field, and the displayed list will be filtered accordingly. You can also click on an item to select or deselect it. The selected items will be displayed below the list.
+
+
+*I dont have a array of json but a flat json with key value pairs*
+
+
+If you have a flat JSON with key-value pairs and you want to display and search the values in Angular, you can modify the previous steps as follows:
+
+1. Define the flat JSON data:
+   - Open the `src/app` folder and create a new file called `data.json`.
+   - Populate `data.json` with your flat JSON data. For example:
+     ```json
+     {
+       "id1": "Value 1",
+       "id2": "Value 2",
+       "id3": "Value 3",
+       "id4": "Value 4",
+       "id5": "Value 5"
+     }
+     ```
+
+2. Modify the JSON list component:
+   - Open the `src/app/json-list` folder and edit the `json-list.component.ts` file:
+     ```typescript
+     import { Component, OnInit } from '@angular/core';
+     import jsonData from '../../data.json';
+
+     @Component({
+       selector: 'app-json-list',
+       templateUrl: './json-list.component.html',
+       styleUrls: ['./json-list.component.css']
+     })
+     export class JsonListComponent implements OnInit {
+       items: { key: string, value: string }[] = Object.entries(jsonData)
+         .map(([key, value]) => ({ key, value }));
+
+       selectedItems: string[] = [];
+       searchTerm: string = '';
+
+       constructor() { }
+
+       ngOnInit(): void { }
+
+       selectItem(item: string): void {
+         if (this.isSelected(item)) {
+           this.selectedItems = this.selectedItems.filter(i => i !== item);
+         } else {
+           this.selectedItems.push(item);
+         }
+       }
+
+       isSelected(item: string): boolean {
+         return this.selectedItems.includes(item);
+       }
+     }
+     ```
+
+3. Update the template for the JSON list component:
+   - Open the `src/app/json-list` folder and edit the `json-list.component.html` file:
+     ```html
+     <input type="text" [(ngModel)]="searchTerm" placeholder="Search">
+
+     <ul>
+       <li *ngFor="let item of items | filter: searchTerm" [class.selected]="isSelected(item.value)" (click)="selectItem(item.value)">
+         {{ item.value }}
+       </li>
+     </ul>
+
+     <div *ngIf="selectedItems.length > 0">
+       <h4>Selected Items:</h4>
+       <ul>
+         <li *ngFor="let selectedItem of selectedItems">
+           {{ selectedItem }}
+         </li>
+       </ul>
+     </div>
+     ```
+
+4. Run the application:
+   - Open a terminal and navigate to the project's root directory (`json-ui`).
+   - Run the command: `ng serve --open`
+   - Your application will open in the browser, and you should see the JSON list UI.
+
+The modified JSON list UI will display the values from the flat JSON. You can search for specific values using the search input field, and the displayed list will be filtered accordingly. You can click on a value to select or deselect it, and the selected values will be displayed below the list.
