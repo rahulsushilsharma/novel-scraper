@@ -30,14 +30,14 @@ async function saveHtml(link: string, page: string) {
 
 async function getLastUrl() {
   const docs = await lastLink.findAsync({});
-  console.log(docs)
-  return docs[0]?.link;
+  console.log(docs);
+  return (docs[0]?.link as string) || null;
 }
 
 async function updateLastUrl(url: string) {
   const lastUrl = await getLastUrl();
   // if (lastUrl) {
-    await lastLink.updateAsync({ link: lastUrl }, { link: url }, {});
+  await lastLink.updateAsync({ link: lastUrl }, { link: url }, {});
   // } else {
   //   await updateParsedLinks(url);
   // }

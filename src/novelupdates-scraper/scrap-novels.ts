@@ -43,4 +43,9 @@ async function getNovelLinks(nextButtonPath: string) {
   return await clickOn(nextButtonPath);
 }
 
+
+async function getNovelMeta(){
+  
+}
+
 main();
