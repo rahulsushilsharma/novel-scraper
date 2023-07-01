@@ -1,5 +1,11 @@
 import { load } from "cheerio";
 
+
+/**
+ * Get the novel links from the ranking page 
+ * @param html_data 
+ * @returns 
+ */
 function parseNovelLinks(html_data: string) {
   const $ = load(html_data);
   const output: { rank: string; title: string; url: string | undefined }[] = [];
