@@ -1,4 +1,5 @@
 import { load } from "cheerio";
+import { meta } from "../dependicies/definations";
 
 
 /**
@@ -19,4 +20,36 @@ function parseNovelLinks(html_data: string) {
   return output;
 }
 
-export { parseNovelLinks };
+function parseNovelPage(html_data: string) {
+  const $ = load(html_data);
+  const genre : meta['genre'] = []
+  $('#seriesgenre a').each((index,ele)=>{
+    genre.push({
+      name:$(ele).text(),
+      disc:$(ele).attr('title')||'',
+    })
+  })
+  const tags : meta['tags'] = []
+  $('#showtags a').each((index,ele)=>{
+    genre.push({
+      name:$(ele).text(),
+      disc:$(ele).attr('title')||'',
+    })
+  })
+  const output: meta = {
+    type: $('#showtype > a').text(),
+    origin_language: $('#showtype > span').text(),
+    genre:genre,
+    tags:tags,
+    rating: $('.seriesother > .uvotes').text(),
+    author:$('#showauthors').text(),
+    artist:$('#showartists').text(),
+    year:$('#edityear').text(),
+    totel_chapters:$('#editstatus').text(),
+    complete:$('#showtranslated').text(),
+    description:$('#editdescription').text(),
+  }
+  return output;
+}
+
+export { parseNovelLinks, parseNovelPage };

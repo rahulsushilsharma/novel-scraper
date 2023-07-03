@@ -62,6 +62,19 @@ async function saveNovelLinks(url: string, data: any) {
     );
   }
 }
+
+async function getNovelLinks() {
+  return await novelLinks.findAsync({ parsed: false })
+}
+
+async function updateParsedlLinks(url: string) {
+  return await novelLinks.updateAsync(
+    { _id: url },
+    { parsed: true },
+    {}
+  );
+}
+
 // await updateParsedLinks("https://www.novelupdates.com/novelslisting/?sort=2&order=1&status=1");
 // getLastUrl()
 
@@ -71,4 +84,6 @@ export {
   getLastUrl,
   updateLastUrl,
   saveNovelLinks,
+  getNovelLinks,
+  updateParsedlLinks,
 };

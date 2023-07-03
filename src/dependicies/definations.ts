@@ -10,23 +10,36 @@ export interface meta {
   last_update?: string;
   names?: string[];
   route_name?: string;
-  genre?: string[];
+  genre?: {
+    name: string;
+    disc: string;
+  }[];
   img_url?: string;
   origin_language?: string;
   author?: string;
   artist?: string;
-  rank?: number|null;
+  rank?: number | string;
   description?: string;
-  totel_chapters?: number|null;
+  totel_chapters?: number | string;
   complete?: string;
+  associated_names?: string | string[];
+  tags?: {
+    name: string;
+    disc: string;
+  }[]
+  rating?: string;
+  type?: string;
+  release_url?: string[]
+  year?:string;
+
 }
 export interface chapter {
-  chapter: string ;
-  title : string;
-  orignal_chapter_number : string;
-  computed_chapter_number : number;
-  date : string;
-  group : string;
-  orignal_url : string;
+  chapter: string;
+  title: string;
+  orignal_chapter_number: string;
+  computed_chapter_number: number;
+  date: string;
+  group: string;
+  orignal_url: string;
 }
 
