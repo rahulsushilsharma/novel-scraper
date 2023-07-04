@@ -8,9 +8,10 @@ async function gotoPage(url: string) {
 }
 
 async function getCurrentPageHtml() {
+  await driver.findElement(By.css("body")).sendKeys("Keys.ESCAPE");
   const data = await driver.findElement(By.css("body"));
   // data.sendKeys("Keys.ESCAPE");
-  await driver.executeScript('return window.stop')
+  // await driver.executeScript('return window.stop')
   const html = await data.getAttribute("innerHTML");
   return html;
 }

@@ -31,6 +31,7 @@ export interface meta {
   type?: string;
   release_url?: string[]
   year?:string;
+  title:string
 
 }
 export interface chapter {

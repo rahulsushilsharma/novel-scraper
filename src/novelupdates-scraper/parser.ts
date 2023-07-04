@@ -20,34 +20,36 @@ function parseNovelLinks(html_data: string) {
   return output;
 }
 
-function parseNovelPage(html_data: string) {
+function parseNovelPage(html_data: string, ranking: string, title: string) {
   const $ = load(html_data);
-  const genre : meta['genre'] = []
-  $('#seriesgenre a').each((index,ele)=>{
+  const genre: meta['genre'] = []
+  $('#seriesgenre a').each((index, ele) => {
     genre.push({
-      name:$(ele).text(),
-      disc:$(ele).attr('title')||'',
+      name: $(ele).text(),
+      disc: $(ele).attr('title') || '',
     })
   })
-  const tags : meta['tags'] = []
-  $('#showtags a').each((index,ele)=>{
+  const tags: meta['tags'] = []
+  $('#showtags a').each((index, ele) => {
     genre.push({
-      name:$(ele).text(),
-      disc:$(ele).attr('title')||'',
+      name: $(ele).text(),
+      disc: $(ele).attr('title') || '',
     })
   })
   const output: meta = {
     type: $('#showtype > a').text(),
     origin_language: $('#showtype > span').text(),
-    genre:genre,
-    tags:tags,
+    genre: genre,
+    tags: tags,
     rating: $('.seriesother > .uvotes').text(),
-    author:$('#showauthors').text(),
-    artist:$('#showartists').text(),
-    year:$('#edityear').text(),
-    totel_chapters:$('#editstatus').text(),
-    complete:$('#showtranslated').text(),
-    description:$('#editdescription').text(),
+    author: $('#showauthors').text(),
+    artist: $('#showartists').text(),
+    year: $('#edityear').text(),
+    totel_chapters: $('#editstatus').text(),
+    complete: $('#showtranslated').text(),
+    description: $('#editdescription').text(),
+    title: title,
+    rank: ranking,
   }
   return output;
 }

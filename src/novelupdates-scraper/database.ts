@@ -11,10 +11,14 @@ const Html = new Datastore({
 const novelLinks = new Datastore({
   filename: "../database/novelupdates/novelLinks.db",
 });
+const novelMeta = new Datastore({
+  filename: "../database/novelupdates/novelMeta.db",
+});
 try {
   await lastLink.loadDatabaseAsync();
   await Html.loadDatabaseAsync();
   await novelLinks.loadDatabaseAsync();
+  await novelMeta.loadDatabaseAsync();
   console.log("loaded");
 } catch (error) {
   console.log(error);
@@ -62,8 +66,27 @@ async function saveNovelLinks(url: string, data: any) {
     );
   }
 }
+async function saveNovelMeta(url: string, data: any) {
+  try {
+    return await novelMeta.insertAsync({
+      _id: url,
+      data: data,
+      parsed: false,
+    });
+  } catch {
+    return await novelMeta.updateAsync(
+      { _id: url },
+      {
+        _id: url,
+        data: data,
+        parsed: false,
+      },
+      {}
+    );
+  }
+}
 
-async function getNovelLinks() {
+async function getUnparsedData() {
   return await novelLinks.findAsync({ parsed: false })
 }
 
@@ -84,6 +107,7 @@ export {
   getLastUrl,
   updateLastUrl,
   saveNovelLinks,
-  getNovelLinks,
+  saveNovelMeta,
+  getUnparsedData,
   updateParsedlLinks,
 };
