@@ -3,9 +3,9 @@ import { meta } from "../dependicies/definations";
 
 
 /**
- * Get the novel links from the ranking page 
- * @param html_data 
- * @returns 
+ * Parses the novel links from the ranking page.
+ * @param html_data - The HTML data of the ranking page.
+ * @returns An array of objects containing the rank, title, and URL of the novels.
  */
 function parseNovelLinks(html_data: string) {
   const $ = load(html_data);
@@ -19,6 +19,14 @@ function parseNovelLinks(html_data: string) {
   });
   return output;
 }
+
+/**
+ * Parses the novel page and extracts metadata.
+ * @param html_data - The HTML data of the novel page.
+ * @param ranking - The ranking of the novel.
+ * @param title - The title of the novel.
+ * @returns The metadata of the novel.
+ */
 
 function parseNovelPage(html_data: string, ranking: string, title: string) {
   const $ = load(html_data);
